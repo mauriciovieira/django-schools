@@ -1,16 +1,18 @@
 from django.urls import include, path
+from rest_framework import routers
+from .views import classroom, students, teachers, quizzes
 
-from .views import classroom, students, teachers
 
 urlpatterns = [
     path('', classroom.home, name='home'),
+    path('quizzes/', quizzes.QuizViewSet.as_view({'get': 'list'}), name='quizzes_list'),
 
     path('students/', include(([
         path('', students.QuizListView.as_view(), name='quiz_list'),
         path('s/', students.StudentList.as_view(), name='student_list'),
         path('interests/', students.StudentInterestsView.as_view(), name='student_interests'),
         path('taken/', students.TakenQuizListView.as_view(), name='taken_quiz_list'),
-        path('quiz/<int:pk>/', students.take_quiz, name='take_quiz'),        
+        path('quiz/<int:pk>/', students.take_quiz, name='take_quiz'),
         path('quiz/<int:pk>/studentresults/', students.QuizResultsView.as_view(), name='student_quiz_results'),
     ], 'classroom'), namespace='students')),
 
